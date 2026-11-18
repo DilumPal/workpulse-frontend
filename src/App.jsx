@@ -9,6 +9,7 @@ import LeaveRequest from './components/LeaveRequest';
 import Profile from './components/Profile';
 import ManageLeaves from './components/ManageLeaves';
 import ManageDepartments from './components/ManageDepartments';
+import ManageEmployees from './components/ManageEmployees';
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
           <Route path="/profile" element={<Profile />} /> {/* Added Profile Route */}
           <Route path="/manage-leaves" element={<ManageLeaves />} />
           <Route path="/manage-departments" element={<ManageDepartments />} />
+          <Route path="/manage-employees" element={<ManageEmployees />} />
         </Route>
         
         <Route path="*" element={<Navigate to="/dashboard" replace />} />
