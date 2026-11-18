@@ -6,7 +6,9 @@ import EmployeeLayout from './components/EmployeeLayout';
 import Dashboard from './components/Dashboard';
 import StaffDirectory from './components/StaffDirectory';
 import LeaveRequest from './components/LeaveRequest';
-import Profile from './components/Profile'; // Import the new component
+import Profile from './components/Profile';
+import ManageLeaves from './components/ManageLeaves';
+import ManageDepartments from './components/ManageDepartments';
 
 function App() {
   return (
@@ -27,6 +29,8 @@ function App() {
           <Route path="/directory" element={<StaffDirectory />} />
           <Route path="/leave-request" element={<LeaveRequest />} />
           <Route path="/profile" element={<Profile />} /> {/* Added Profile Route */}
+          <Route path="/manage-leaves" element={<ManageLeaves />} />
+          <Route path="/manage-departments" element={<ManageDepartments />} />
         </Route>
         
         <Route path="*" element={<Navigate to="/dashboard" replace />} />
