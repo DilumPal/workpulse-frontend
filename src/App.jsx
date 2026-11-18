@@ -2,6 +2,11 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import Login from './components/Login';
 import ProtectedRoute from './components/ProtectedRoute';
+import EmployeeLayout from './components/EmployeeLayout';
+import Dashboard from './components/Dashboard';
+import StaffDirectory from './components/StaffDirectory';
+import LeaveRequest from './components/LeaveRequest';
+import Profile from './components/Profile'; // Import the new component
 
 function App() {
   return (
@@ -9,15 +14,20 @@ function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
 
-        {/* Private Employee Dashboard */}
+        {/* Secured Routes with Sidebar Layout */}
         <Route 
-          path="/dashboard" 
           element={
             <ProtectedRoute>
-              <div className="p-10 text-xl font-bold text-blue-600">Employee Dashboard Secured!</div>
+              <EmployeeLayout />
             </ProtectedRoute>
-          } 
-        />
+          }
+        >
+          {/* These pages render inside the <Outlet /> of EmployeeLayout */}
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/directory" element={<StaffDirectory />} />
+          <Route path="/leave-request" element={<LeaveRequest />} />
+          <Route path="/profile" element={<Profile />} /> {/* Added Profile Route */}
+        </Route>
         
         <Route path="*" element={<Navigate to="/dashboard" replace />} />
       </Routes>
