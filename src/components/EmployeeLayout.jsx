@@ -43,7 +43,7 @@ export default function EmployeeLayout() {
     : user?.email?.split("@")[0];
 
   const navLinkStyle = ({ isActive }) =>
-    `block px-4 py-3 rounded-lg font-medium transition-all duration-150 ${
+    `block px-4 py-2 text-sm rounded-lg font-medium transition-all duration-150 ${
       isActive
         ? "bg-blue-600 text-white shadow-md shadow-blue-950/40"
         : "text-slate-300 hover:bg-white/10 hover:text-white"
@@ -51,10 +51,10 @@ export default function EmployeeLayout() {
 
   return (
     <div className="flex h-screen bg-gradient-to-br from-slate-50 via-blue-50/70 to-sky-100/60 overflow-hidden">
-      {/* Left Sidebar - Deep Navy */}
-      <aside className="w-64 bg-gradient-to-b from-slate-900 via-blue-950 to-slate-900 text-white border-r border-slate-800 shadow-xl flex flex-col">
-        <div className="p-6 border-b border-white/10 flex flex-col items-center">
-          <h1 className="text-2xl font-bold tracking-tight w-full text-left mb-6 text-white">
+      {/* Left Sidebar - Deep Navy (Non-scrollable) */}
+      <aside className="w-64 h-screen bg-gradient-to-b from-slate-900 via-blue-950 to-slate-900 text-white border-r border-slate-800 shadow-xl flex flex-col overflow-hidden">
+        <div className="p-5 border-b border-white/10 flex flex-col items-center shrink-0">
+          <h1 className="text-2xl font-bold tracking-tight w-full text-left mb-4 text-white">
             Work<span className="text-sky-400">Pulse</span>
           </h1>
 
@@ -70,7 +70,7 @@ export default function EmployeeLayout() {
           ) : (
             <>
               <Link to="/profile" className="block relative group rounded-full">
-                <div className="w-24 h-24 rounded-full bg-blue-900/60 overflow-hidden border-4 border-blue-400/30 shadow-lg group-hover:border-sky-400 transition-all">
+                <div className="w-20 h-20 rounded-full bg-blue-900/60 overflow-hidden border-4 border-blue-400/30 shadow-lg group-hover:border-sky-400 transition-all">
                   {profile?.profilePhotoUrl ? (
                     <img
                       src={profile.profilePhotoUrl}
@@ -78,18 +78,18 @@ export default function EmployeeLayout() {
                       className="w-full h-full object-cover"
                     />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center text-3xl text-sky-200 font-bold bg-blue-900/80 capitalize">
+                    <div className="w-full h-full flex items-center justify-center text-2xl text-sky-200 font-bold bg-blue-900/80 capitalize">
                       {displayName?.charAt(0)}
                     </div>
                   )}
                 </div>
               </Link>
 
-              <div className="mt-4 text-center">
+              <div className="mt-3 text-center">
                 <p className="font-bold text-white capitalize">
                   {displayName}
                 </p>
-                <p className="text-sm text-blue-200/80 font-medium mt-1">
+                <p className="text-xs text-blue-200/80 font-medium mt-0.5">
                   {profile?.jobRole || (isHr ? "HR Manager" : "Employee")}
                 </p>
               </div>
@@ -97,7 +97,7 @@ export default function EmployeeLayout() {
           )}
         </div>
 
-        <nav className="flex-1 p-4 space-y-1.5 overflow-y-auto">
+        <nav className="flex-1 px-4 py-3 space-y-1 overflow-hidden">
           {/* Standard Employee & HR Manager Links */}
           {!isAdmin && (
             <>
@@ -115,8 +115,8 @@ export default function EmployeeLayout() {
 
           {/* HR Manager Controls */}
           {isHr && (
-            <div className="pt-4 mt-4 border-t border-white/10 space-y-1.5">
-              <p className="px-4 text-xs font-semibold text-blue-300/60 uppercase tracking-wider mb-2">
+            <div className="pt-3 mt-3 border-t border-white/10 space-y-1">
+              <p className="px-4 text-xs font-semibold text-blue-300/60 uppercase tracking-wider mb-1.5">
                 HR Management
               </p>
               <NavLink to="/hr-dashboard" className={navLinkStyle}>
@@ -133,8 +133,8 @@ export default function EmployeeLayout() {
 
           {/* Admin Controls */}
           {isAdmin && (
-            <div className="space-y-1.5">
-              <p className="px-4 text-xs font-semibold text-blue-300/60 uppercase tracking-wider mb-2">
+            <div className="space-y-1">
+              <p className="px-4 text-xs font-semibold text-blue-300/60 uppercase tracking-wider mb-1.5">
                 Administration
               </p>
               <NavLink to="/manage-departments" className={navLinkStyle}>
@@ -147,10 +147,10 @@ export default function EmployeeLayout() {
           )}
         </nav>
 
-        <div className="p-4 border-t border-white/10">
+        <div className="p-4 border-t border-white/10 shrink-0">
           <button
             onClick={logout}
-            className="w-full px-4 py-2.5 text-sm font-medium text-slate-200 bg-white/10 border border-white/10 rounded-lg hover:bg-red-600 hover:border-red-600 hover:text-white transition-colors"
+            className="w-full px-4 py-2 text-sm font-medium text-slate-200 bg-white/10 border border-white/10 rounded-lg hover:bg-red-600 hover:border-red-600 hover:text-white transition-colors"
           >
             Sign Out
           </button>

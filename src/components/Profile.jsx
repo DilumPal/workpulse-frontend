@@ -168,7 +168,7 @@ export default function Profile() {
       <div className="p-8 bg-white rounded-lg shadow-sm">
         <form onSubmit={handleSubmit}>
           {/* Top Section: Photo and Basic Info */}
-          <div className="flex flex-col md:flex-row items-center md:items-start space-y-6 md:space-y-0 md:space-x-8 mb-8 pb-8 border-b">
+          <div className="flex flex-col md:flex-row items-center md:items-center space-y-6 md:space-y-0 md:space-x-8 mb-8 pb-8 border-b">
             {/* Profile Photo Area */}
             <div className="relative group flex-shrink-0">
               <div className="w-32 h-32 rounded-full bg-gray-200 border-4 border-white shadow-md overflow-hidden flex items-center justify-center">
@@ -231,9 +231,6 @@ export default function Profile() {
               <p className="text-gray-500 font-medium">
                 {profile.jobRole || "Employee"}
               </p>
-              <span className="inline-block mt-2 px-3 py-1 bg-blue-50 text-blue-700 text-xs font-bold rounded-full">
-                ID: {profile.id || profile.employeeId}
-              </span>
             </div>
           </div>
 
