@@ -1,9 +1,11 @@
 import { useEffect, useState, useContext } from 'react';
+import { useOutletContext } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import api from '../api/axios';
 
 export default function Dashboard() {
     const { user } = useContext(AuthContext);
+    const { profile } = useOutletContext() || {};
     const [attendanceHistory, setAttendanceHistory] = useState([]);
     const [searchDate, setSearchDate] = useState('');
     const [error, setError] = useState('');
@@ -83,8 +85,7 @@ export default function Dashboard() {
         return 'Good Evening';
     };
 
-    // Extract username from email for a personalized touch (e.g., employee@workpulse.com -> employee)
-    const displayName = user?.email?.split('@')[0] || 'User';
+    const displayName = profile?.firstName || user?.email?.split('@')[0] || 'User';
 
     return (
         <div className="max-w-5xl mx-auto space-y-6">
@@ -96,7 +97,7 @@ export default function Dashboard() {
                 <p className="text-gray-500 mt-1">Here is your attendance overview.</p>
             </div>
 
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">Today's Attendance</h2>
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">Today&apos;s Attendance</h2>
             
             {error && <div className="p-4 text-red-700 bg-red-100 rounded-md font-medium">{error}</div>}
             {successMessage && <div className="p-4 text-green-700 bg-green-100 rounded-md font-medium">{successMessage}</div>}

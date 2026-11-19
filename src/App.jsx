@@ -10,6 +10,7 @@ import Profile from './components/Profile';
 import ManageLeaves from './components/ManageLeaves';
 import ManageDepartments from './components/ManageDepartments';
 import ManageEmployees from './components/ManageEmployees';
+import HrDashboard from './components/HrDashboard';
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
           <Route path="/manage-leaves" element={<ManageLeaves />} />
           <Route path="/manage-departments" element={<ManageDepartments />} />
           <Route path="/manage-employees" element={<ManageEmployees />} />
+          <Route path="/hr-dashboard" element={<HrDashboard />} />
         </Route>
         
         <Route path="*" element={<Navigate to="/dashboard" replace />} />

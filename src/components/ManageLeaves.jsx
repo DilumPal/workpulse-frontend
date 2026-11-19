@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
+import { useOutletContext } from 'react-router-dom';
 import api from '../api/axios';
 
 export default function ManageLeaves() {
+    const { profile } = useOutletContext() || {};
     const [requests, setRequests] = useState([]);
     const [filter, setFilter] = useState('Pending');
     const [loading, setLoading] = useState(true);
@@ -39,7 +41,11 @@ export default function ManageLeaves() {
             );
             setActionMessage(`Leave request #${leaveId} marked as ${newStatus}.`);
         } catch (err) {
-            setError(err.response?.data?.details || `Failed to ${newStatus.toLowerCase()} leave request.`);
+            setError(
+                err.response?.data?.details ||
+                err.response?.data?.message ||
+                `Failed to ${newStatus.toLowerCase()} leave request.`
+            );
         }
     };
 
@@ -57,6 +63,8 @@ export default function ManageLeaves() {
                 return 'bg-yellow-100 text-yellow-800';
         }
     };
+
+    const currentEmployeeId = profile?.employeeId || profile?.id;
 
     return (
         <div className="max-w-6xl mx-auto space-y-6">
@@ -104,57 +112,74 @@ export default function ManageLeaves() {
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-gray-200 text-sm">
-                                {filteredRequests.map((req) => (
-                                    <tr key={req.leaveId} className="hover:bg-gray-50">
-                                        <td className="py-4 px-4 font-medium text-gray-900">
-                                            {req.employeeName || 'Unknown'}
-                                        </td>
-                                        <td className="py-4 px-4 text-gray-700">
-                                            {req.leaveType}
-                                            {req.requestedDuration && (
-                                                <span className="block text-xs text-gray-400">
-                                                    {req.requestedDuration}
-                                                </span>
-                                            )}
-                                        </td>
-                                        <td className="py-4 px-4 text-gray-700 whitespace-nowrap">
-                                            {req.startDate === req.endDate
-                                                ? req.startDate
-                                                : `${req.startDate} to ${req.endDate}`}
-                                        </td>
-                                        <td className="py-4 px-4 text-gray-600 max-w-xs truncate" title={req.reason}>
-                                            {req.reason}
-                                        </td>
-                                        <td className="py-4 px-4">
-                                            <span className={`px-2.5 py-1 rounded-full text-xs font-semibold ${getStatusBadge(req.status)}`}>
-                                                {req.status}
-                                            </span>
-                                        </td>
-                                        <td className="py-4 px-4 text-gray-500">
-                                            {req.reviewedBy || '--'}
-                                        </td>
-                                        <td className="py-4 px-4 text-right whitespace-nowrap">
-                                            {req.status?.toLowerCase() === 'pending' ? (
-                                                <div className="inline-flex space-x-2">
-                                                    <button
-                                                        onClick={() => handleStatusUpdate(req.leaveId, 'Approved')}
-                                                        className="px-3 py-1.5 text-xs font-medium text-white bg-green-600 rounded hover:bg-green-700 transition-colors"
-                                                    >
-                                                        Approve
-                                                    </button>
-                                                    <button
-                                                        onClick={() => handleStatusUpdate(req.leaveId, 'Rejected')}
-                                                        className="px-3 py-1.5 text-xs font-medium text-white bg-red-600 rounded hover:bg-red-700 transition-colors"
-                                                    >
-                                                        Reject
-                                                    </button>
+                                {filteredRequests.map((req) => {
+                                    const isOwnRequest =
+                                        (currentEmployeeId && req.employeeId === currentEmployeeId) ||
+                                        (profile && `${profile.firstName} ${profile.lastName}` === req.employeeName);
+
+                                    return (
+                                        <tr key={req.leaveId} className="hover:bg-gray-50">
+                                            <td className="py-4 px-4">
+                                                <div className="font-medium text-gray-900">
+                                                    {req.employeeName || 'Unknown'}
                                                 </div>
-                                            ) : (
-                                                <span className="text-xs text-gray-400">Completed</span>
-                                            )}
-                                        </td>
-                                    </tr>
-                                ))}
+                                                <div className="text-xs text-gray-500">
+                                                    {req.employeeJobRole || 'Employee'}
+                                                </div>
+                                            </td>
+                                            <td className="py-4 px-4 text-gray-700">
+                                                {req.leaveType}
+                                                {req.requestedDuration && (
+                                                    <span className="block text-xs text-gray-400">
+                                                        {req.requestedDuration} {Number(req.requestedDuration) === 1 ? 'day' : 'days'}
+                                                    </span>
+                                                )}
+                                            </td>
+                                            <td className="py-4 px-4 text-gray-700 whitespace-nowrap">
+                                                {req.startDate === req.endDate
+                                                    ? req.startDate
+                                                    : `${req.startDate} to ${req.endDate}`}
+                                            </td>
+                                            <td className="py-4 px-4 text-gray-600 max-w-xs truncate" title={req.reason}>
+                                                {req.reason}
+                                            </td>
+                                            <td className="py-4 px-4">
+                                                <span className={`px-2.5 py-1 rounded-full text-xs font-semibold ${getStatusBadge(req.status)}`}>
+                                                    {req.status}
+                                                </span>
+                                            </td>
+                                            <td className="py-4 px-4 text-gray-500">
+                                                {req.reviewedBy || '--'}
+                                            </td>
+                                            <td className="py-4 px-4 text-right whitespace-nowrap">
+                                                {req.status?.toLowerCase() === 'pending' ? (
+                                                    isOwnRequest ? (
+                                                        <span className="text-xs font-medium text-gray-400 italic">
+                                                            Awaiting another HR
+                                                        </span>
+                                                    ) : (
+                                                        <div className="inline-flex space-x-2">
+                                                            <button
+                                                                onClick={() => handleStatusUpdate(req.leaveId, 'Approved')}
+                                                                className="px-3 py-1.5 text-xs font-medium text-white bg-green-600 rounded hover:bg-green-700 transition-colors"
+                                                            >
+                                                                Approve
+                                                            </button>
+                                                            <button
+                                                                onClick={() => handleStatusUpdate(req.leaveId, 'Rejected')}
+                                                                className="px-3 py-1.5 text-xs font-medium text-white bg-red-600 rounded hover:bg-red-700 transition-colors"
+                                                            >
+                                                                Reject
+                                                            </button>
+                                                        </div>
+                                                    )
+                                                ) : (
+                                                    <span className="text-xs text-gray-400">Completed</span>
+                                                )}
+                                            </td>
+                                        </tr>
+                                    );
+                                })}
                             </tbody>
                         </table>
                     </div>
