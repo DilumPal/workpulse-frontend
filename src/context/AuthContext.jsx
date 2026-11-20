@@ -23,16 +23,21 @@ export const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    const savedRole = localStorage.getItem("role");
+    const token = sessionStorage.getItem("token");
+    const savedRole = sessionStorage.getItem("role");
     if (token) {
       try {
         const decoded = jwtDecode(token);
-        const role = extractRole(decoded, savedRole);
-        setUser({ email: decoded.sub, role });
+        if (decoded.exp && decoded.exp * 1000 < Date.now()) {
+          sessionStorage.removeItem("token");
+          sessionStorage.removeItem("role");
+        } else {
+          const role = extractRole(decoded, savedRole);
+          setUser({ email: decoded.sub, role });
+        }
       } catch (err) {
-        localStorage.removeItem("token");
-        localStorage.removeItem("role");
+        sessionStorage.removeItem("token");
+        sessionStorage.removeItem("role");
       }
     }
     setLoading(false);
@@ -44,8 +49,8 @@ export const AuthProvider = ({ children }) => {
     const decoded = jwtDecode(token);
     const role = extractRole(decoded, response.data.role);
 
-    localStorage.setItem("token", token);
-    if (role) localStorage.setItem("role", role);
+    sessionStorage.setItem("token", token);
+    if (role) sessionStorage.setItem("role", role);
 
     setUser({ email: decoded.sub, role });
 
@@ -59,8 +64,8 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("role");
+    sessionStorage.removeItem("token");
+    sessionStorage.removeItem("role");
     setUser(null);
     navigate("/login");
   };

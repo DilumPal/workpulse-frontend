@@ -16,6 +16,7 @@ function App() {
   return (
     <AuthProvider>
       <Routes>
+        <Route path="/" element={<Navigate to="/login" replace />} />
         <Route path="/login" element={<Login />} />
 
         {/* Secured Routes with Sidebar Layout */}
@@ -30,14 +31,14 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/directory" element={<StaffDirectory />} />
           <Route path="/leave-request" element={<LeaveRequest />} />
-          <Route path="/profile" element={<Profile />} /> {/* Added Profile Route */}
+          <Route path="/profile" element={<Profile />} />
           <Route path="/manage-leaves" element={<ManageLeaves />} />
           <Route path="/manage-departments" element={<ManageDepartments />} />
           <Route path="/manage-employees" element={<ManageEmployees />} />
           <Route path="/hr-dashboard" element={<HrDashboard />} />
         </Route>
         
-        <Route path="*" element={<Navigate to="/dashboard" replace />} />
+        <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     </AuthProvider>
   );
